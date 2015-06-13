@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BoostLanguage</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="Enter_text">Please enter your text :</string>
+    <string name="EnterTrans">Please enter the translation</string>
+    <string name="hello">hello</string>
+    <string name="stopAlarm">Stop Alarm</string>
+    <string name="alarmOrginText">What is translation of :</string>
+    <string name="alarmTransText">Translation :</string>
+    <string name="settingBtn">Setting</string>
+    <string name="alarmCheck">check !</string>
+    <string name="txtVeiwDesc">Please here specify number of days for the reminder</string>
+    <string name="title_activity_setting">SettingActivity</string>
+    <string name="txtVeiwSettingCor">Correct answer : </string>
+    <string name="txtVeiwSettingWro">Wrong answer : </string>
+    <string name="btnsettingSave">Save </string>
+
+</resources>

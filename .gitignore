@@ -1,0 +1,10 @@
+# Compiled source #
+###################
+*.class
+*.apk
+*.project
+*.settings
+*.dex
+*.ap_
+*/bin/*
+.classpath
