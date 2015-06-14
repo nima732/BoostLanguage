@@ -1,7 +1,6 @@
 # Compiled source #
 ###################
 *.class
-*.apk
 *.project
 *.settings
 *.dex
