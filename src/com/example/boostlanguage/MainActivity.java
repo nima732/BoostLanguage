@@ -27,6 +27,7 @@ public class MainActivity extends ListActivity {
 	private EditText transText;
 	private Toast myToast;
 	private SettingDAO settingDAO;
+	Setting setting = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +96,7 @@ public class MainActivity extends ListActivity {
 
 	}
 
+	// TODO this preparAlarm and the other one in AlarmManagerActivity should become one.
 	private void prepareAlarm(long insertedId) {
 
 		Intent intent = new Intent(MainActivity.this,
@@ -113,7 +115,7 @@ public class MainActivity extends ListActivity {
 						PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		alarmManager.set(AlarmManager.RTC_WAKEUP,
-				System.currentTimeMillis() + 5000, pendingIntent);
+				System.currentTimeMillis() + (long)(setting.getNumberWrongDay() * 24 * 60 * 60 * 1000), pendingIntent);
 
 		if (myToast != null) {
 			myToast.cancel();
@@ -125,7 +127,7 @@ public class MainActivity extends ListActivity {
 
 	private boolean ifSettingSets() {
 
-		Setting setting = null;
+		
 
 		try {
 			setting = settingDAO.getAll();

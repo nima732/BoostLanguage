@@ -105,6 +105,7 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 	}
 	
 	private void prepareAlarm(long insertedId,long time ) {
+		Log.i("AlarmManagerActivity", " @@@  time is " + time);
 		Intent intent = new Intent(AlarmManagerActivity.this,
 				AlarmManagerActivity.class);
 		// For unspecified reason Extra will be deliver when action set (in
@@ -199,7 +200,8 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 		switch (v.getId()){
 		case  R.id.alarmCheck :
 			Log.i("AlarmManagerActivity", " @@@ Check alarm @@@");
-			createReminder(sentences);			
+			createReminder(sentences);	
+			mediaPlayer.stop();
 			finish();
 			
 			break;
