@@ -23,31 +23,34 @@ import android.widget.Toast;
 public class MainActivity extends ListActivity {
 
 	private SentencesDAO sentencesDAO;
-	private EditText sentencesText ;
-	private EditText transText ;
+	private EditText sentencesText;
+	private EditText transText;
 	private Toast myToast;
-	
+	private SettingDAO settingDAO;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		sentencesDAO = new SentencesDAO(this);
 		sentencesDAO.open();
-		
+		settingDAO = new SettingDAO(this);
+		settingDAO.open();
+
 		sentencesText = (EditText) findViewById(R.id.sentensTxt);
 		transText = (EditText) findViewById(R.id.transTXT);
-		
+
 		List<Sentences> values = sentencesDAO.getAllSentences();
-		
-//		sentencesDAO.deleteAll();
-		
+
+		// sentencesDAO.deleteAll();
+
 		values = sentencesDAO.getAllSentences();
 		// use the SimpleCursorAdapter to show the
-	    // elements in a ListView
+		// elements in a ListView
 		ArrayAdapter<Sentences> adapter = new ArrayAdapter<Sentences>(this,
-		        android.R.layout.simple_list_item_1, values);
-		    setListAdapter(adapter);
+				android.R.layout.simple_list_item_1, values);
+		setListAdapter(adapter);
 	}
 
 	@Override
@@ -56,7 +59,7 @@ public class MainActivity extends ListActivity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
+
 	public void saveWorld(View view){
 		
 		ArrayAdapter<Sentences> adapter = (ArrayAdapter<Sentences>) getListAdapter();
@@ -70,6 +73,13 @@ public class MainActivity extends ListActivity {
 
 		sentences = new Sentences(sentencesTXT,transTxt);
 		
+		if (!ifSettingSets()){
+			Toast toast = Toast.makeText(this, "Please first set the setting",
+					1500);
+			toast.show();
+			return;
+		}
+		
 		sentences = sentencesDAO.insertRow(sentences);
 		adapter.add(sentences);
 		
@@ -77,51 +87,56 @@ public class MainActivity extends ListActivity {
 		
 		System.out.println("@@@@@@@");
 	}
-	
-	public void goSetting(View view){
-		Intent intent = new Intent(MainActivity.this,SettingActivity.class);
+
+	public void goSetting(View view) {
+		Intent intent = new Intent(MainActivity.this, SettingActivity.class);
 		intent.setAction("ariseSetting");
 		startActivity(intent);
-		
+
 	}
-	
-	private void prepareAlarm(long insertedId){
-		
-		SettingDAO settingDAO = new SettingDAO(this);
-		settingDAO.open();
+
+	private void prepareAlarm(long insertedId) {
+
+		Intent intent = new Intent(MainActivity.this,
+				AlarmManagerActivity.class);
+		// For unspecific reason Extra will be deliver when action set (in
+		// Pending thing).
+		intent.setAction("SomeAction");
+		// intent.putExtra("insertedId", insertedId);
+
+		Bundle extras = new Bundle();
+		extras.putString("insertedId", String.valueOf(insertedId));
+		intent.putExtras(extras);
+		// TODO find what means PendingIntent.FLAG_CANCEL_CURRENT
+		PendingIntent pendingIntent = PendingIntent
+				.getActivity(MainActivity.this, 2, intent,
+						PendingIntent.FLAG_CANCEL_CURRENT);
+		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+		alarmManager.set(AlarmManager.RTC_WAKEUP,
+				System.currentTimeMillis() + 5000, pendingIntent);
+
+		if (myToast != null) {
+			myToast.cancel();
+		}
+
+		myToast = Toast.makeText(MainActivity.this, "set Alarm !!!", 1000);
+		myToast.show();
+	}
+
+	private boolean ifSettingSets() {
+
 		Setting setting = null;
-		
+
 		try {
 			setting = settingDAO.getAll();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		if (setting == null){
-			Toast toast = Toast.makeText(this, "Please first set the setting", 1500);
-			toast.show();
-			return;
+
+		if (setting == null) {
+			return false;
 		}
-		
-		Intent intent = new Intent(MainActivity.this,AlarmManagerActivity.class);
-		// For unspecific reason Extra will be deliver when action set (in Pending thing).
-		intent.setAction("SomeAction");
-//		intent.putExtra("insertedId", insertedId);
-		
-		Bundle extras = new Bundle();
-		extras.putString("insertedId", String.valueOf(insertedId));
-		intent.putExtras(extras);
-		// TODO find what means PendingIntent.FLAG_CANCEL_CURRENT
-		PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 2, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-		alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pendingIntent);
-		
-		if (myToast != null){
-			myToast.cancel();
-		}
-		
-		myToast = Toast.makeText(MainActivity.this, "set Alarm !!!", 1000);
-		myToast.show();
+		return true;
 	}
 
 }

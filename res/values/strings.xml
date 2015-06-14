@@ -17,5 +17,8 @@
     <string name="txtVeiwSettingCor">Correct answer : </string>
     <string name="txtVeiwSettingWro">Wrong answer : </string>
     <string name="btnsettingSave">Save </string>
+    <string name="settingClearData">Clear</string>
+    <string name="settingClearDatatxt">Do you want to clear all the sentences ?</string>
+    
 
 </resources>

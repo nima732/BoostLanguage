@@ -18,7 +18,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
   public static final String wrong_answer = "wrong_answer";
   
   private static final String DATABASE_NAME = "sentences.db";
-  private static final int DATABASE_VERSION = 5;
+  private static final int DATABASE_VERSION = 6;
 
   // Database creation sql statement
   private static final String DATABASE_CREATE = "create table "

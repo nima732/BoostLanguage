@@ -40,12 +40,10 @@
                 android:id="@+id/settingEdtCorrect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1" >
 
                 <requestFocus />
             </EditText>
-
         </LinearLayout>
 
         <LinearLayout
@@ -65,21 +63,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:ems="10"
-                 />
-
+                android:ems="10" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/settingSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:onClick="saveSetting"
+            android:text="@string/btnsettingSave" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/settingSave"
+    <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="saveSetting"
-        android:layout_alignRight="@+id/relativeLayout1"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/relativeLayout1"
         android:layout_marginTop="50dp"
-        android:text="@string/btnsettingSave" />
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/settingClearDatatxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/settingClearDatatxt" />
+
+        <Button
+            android:id="@+id/settingClearData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"  
+            android:onClick="settingClearData"          
+            android:text="@string/settingClearData" />
+    </LinearLayout>
 
 </RelativeLayout>

@@ -1,11 +1,14 @@
 package com.example.boostlanguage;
 
+import com.example.boostlanguage.DAO.SentencesDAO;
 import com.example.boostlanguage.DAO.SettingDAO;
 import com.example.boostlanguage.entity.Setting;
 import com.example.bootlanguage.util.ReminderUtility;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
@@ -13,7 +16,8 @@ import android.widget.Toast;
 
 public class SettingActivity extends Activity {
 
-	SettingDAO settingDAO ; 
+	SettingDAO settingDAO ;
+	SentencesDAO sentencesDAO ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -21,6 +25,9 @@ public class SettingActivity extends Activity {
 		
 		settingDAO = new SettingDAO(this);
 		settingDAO.open();
+		
+		sentencesDAO = new SentencesDAO(SettingActivity.this);
+		sentencesDAO.open();
 
 	}
 
@@ -81,6 +88,30 @@ public class SettingActivity extends Activity {
 			toast.show();
 
 		}
+		
+	}
+	
+	public void settingClearData(View view){
+		
+		new AlertDialog.Builder(this)
+	    .setTitle("Delete entry")
+	    .setMessage("Are you sure you want to delete all sentences?")
+	    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+	        	
+	        	sentencesDAO.deleteAll();
+	        
+	        }
+	     })
+	    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+	            // do nothing
+	        }
+	     })
+	    .setIcon(android.R.drawable.ic_dialog_alert)
+	     .show();
+		
+		
 		
 	}
 	

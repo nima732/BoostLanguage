@@ -1,5 +1,7 @@
 package com.example.boostlanguage;
 
+import java.io.IOException;
+
 import com.example.boostlanguage.DAO.SQLiteHelper;
 import com.example.boostlanguage.DAO.SentencesDAO;
 import com.example.boostlanguage.DAO.SettingDAO;
@@ -11,6 +13,10 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.util.Log;
@@ -30,6 +36,7 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 	SettingDAO settingDAO;
 	Sentences sentences;
 	private Toast myToast;
+	MediaPlayer mediaPlayer;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -68,6 +75,8 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 		Button checkButton = (Button) findViewById(R.id.alarmCheck);
 		checkButton.setOnClickListener(this);
 
+		playSound(this,getAlarmUri());
+		
 	}
 	
 
@@ -76,6 +85,25 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 		wakeLock.release();
 	}
 
+	private void playSound( Context context, Uri alert){
+		mediaPlayer = new MediaPlayer();
+		try{
+			
+			mediaPlayer.setDataSource(context, alert);
+			AudioManager audioManager = (AudioManager) context.getSystemService(context.AUDIO_SERVICE);
+			
+			if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0){
+				mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+				mediaPlayer.prepare();
+				mediaPlayer.start();
+			}
+			
+		}catch(IOException ex){
+			ex.printStackTrace();
+			Log.i("AlarmManagerActivity", "No audio file are found!");
+		}
+	}
+	
 	private void prepareAlarm(long insertedId,long time ) {
 		Intent intent = new Intent(AlarmManagerActivity.this,
 				AlarmManagerActivity.class);
@@ -177,6 +205,7 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 			break;
 		case R.id.stopAlarm :
 			Log.i("AlarmManagerActivity", " @@@ stop alarm @@@");
+			mediaPlayer.stop();
 			finish();
 			
 			break;
@@ -196,6 +225,17 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 		}
 		
 		return setting;
+	}
+	
+	private Uri getAlarmUri(){
+		Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+		if (alert == null){
+			alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+			if (alert == null){
+				alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+			}
+		}
+		return alert;
 	}
 
 }
