@@ -10,14 +10,17 @@ import com.example.boostlanguage.entity.Setting;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends ListActivity {
@@ -127,8 +130,6 @@ public class MainActivity extends ListActivity {
 
 	private boolean ifSettingSets() {
 
-		
-
 		try {
 			setting = settingDAO.getAll();
 		} catch (Exception e) {
@@ -140,5 +141,45 @@ public class MainActivity extends ListActivity {
 		}
 		return true;
 	}
+	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+ 
+		Log.i("MainActivity", "%%%%%%%%%%%%");
 
+		if (!ifSettingSets()){
+			Toast toast = Toast.makeText(this, "Please first set the setting",
+					1500);
+			toast.show();
+			return;
+		}
+		
+		//get selected items
+		Sentences sentences =  (Sentences) getListAdapter().getItem(position);
+		
+		dialogSetAlarm(sentences);
+ 
+	}
+	
+	public void dialogSetAlarm(final Sentences sentences){
+		new AlertDialog.Builder(this)
+	    .setTitle("Reset alarm")
+	    .setMessage("Are you sure you want to reset the alarm for " + sentences.getWorld())
+	    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+	        	
+	        	prepareAlarm(sentences.getId());
+	        
+	        }
+	     })
+	    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+	            // do nothing
+	        }
+	     })
+	    .setIcon(android.R.drawable.ic_dialog_alert)
+	     .show();
+
+	}
+	
 }
