@@ -7,6 +7,7 @@ import com.example.boostlanguage.DAO.SentencesDAO;
 import com.example.boostlanguage.DAO.SettingDAO;
 import com.example.boostlanguage.entity.Sentences;
 import com.example.boostlanguage.entity.Setting;
+import com.example.bootlanguage.util.Constant;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -36,7 +37,7 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 	SettingDAO settingDAO;
 	Sentences sentences;
 	private Toast myToast;
-	MediaPlayer mediaPlayer;
+	MediaPlayer mediaPlayer,mediaPlayerBeep;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -75,14 +76,19 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 		Button checkButton = (Button) findViewById(R.id.alarmCheck);
 		checkButton.setOnClickListener(this);
 
-		playSound(this,getAlarmUri());
+//		playSound(this,getAlarmUri());
+		playSoundBeep();
 		
 	}
 	
 
 	public void onStop() {
 		super.onStop();
+		try{
 		wakeLock.release();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void playSound( Context context, Uri alert){
@@ -118,7 +124,7 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 		intent.putExtras(extras);
 		// TODO find what means PendingIntent.FLAG_CANCEL_CURRENT
 		PendingIntent pendingIntent = PendingIntent.getActivity(
-				AlarmManagerActivity.this, 2, intent,
+				AlarmManagerActivity.this, (int)Constant.generateUniqeCounter(), intent,
 				PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		alarmManager.set(AlarmManager.RTC_WAKEUP,
@@ -201,12 +207,14 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 		case  R.id.alarmCheck :
 			Log.i("AlarmManagerActivity", " @@@ Check alarm @@@");
 			createReminder(sentences);	
+			if (mediaPlayer != null)
 			mediaPlayer.stop();
 			finish();
 			
 			break;
 		case R.id.stopAlarm :
 			Log.i("AlarmManagerActivity", " @@@ stop alarm @@@");
+			if (mediaPlayer != null)
 			mediaPlayer.stop();
 			finish();
 			
@@ -228,6 +236,15 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 		
 		return setting;
 	}
+	
+	private void playSoundBeep(){
+		mediaPlayerBeep = MediaPlayer.create(this, R.raw.beep_07);								// Using MediaPlayer to play sound. I have download a beep file to 
+																							// play. Then put the file in new created folder -raw-.
+		mediaPlayerBeep.setLooping(false);	
+		Log.e("beep","started0");
+		mediaPlayerBeep.start();
+	}
+
 	
 	private Uri getAlarmUri(){
 		Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);

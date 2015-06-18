@@ -6,6 +6,7 @@ import com.example.boostlanguage.DAO.SentencesDAO;
 import com.example.boostlanguage.DAO.SettingDAO;
 import com.example.boostlanguage.entity.Sentences;
 import com.example.boostlanguage.entity.Setting;
+import com.example.bootlanguage.util.Constant;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -114,7 +115,7 @@ public class MainActivity extends ListActivity {
 		intent.putExtras(extras);
 		// TODO find what means PendingIntent.FLAG_CANCEL_CURRENT
 		PendingIntent pendingIntent = PendingIntent
-				.getActivity(MainActivity.this, 2, intent,
+				.getActivity(MainActivity.this, (int)Constant.generateUniqeCounter(), intent,
 						PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		alarmManager.set(AlarmManager.RTC_WAKEUP,
