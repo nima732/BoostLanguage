@@ -88,7 +88,7 @@ public class MainActivity extends ListActivity {
 		sentences = sentencesDAO.insertRow(sentences);
 		adapter.add(sentences);
 		
-		prepareAlarm( sentences.getId());
+		prepareAlarm( sentences);
 		
 		System.out.println("@@@@@@@");
 	}
@@ -101,21 +101,26 @@ public class MainActivity extends ListActivity {
 	}
 
 	// TODO this preparAlarm and the other one in AlarmManagerActivity should become one.
-	private void prepareAlarm(long insertedId) {
+	private void prepareAlarm(Sentences sentences) {
 
 		Intent intent = new Intent(MainActivity.this,
 				AlarmManagerActivity.class);
-		// For unspecific reason Extra will be deliver when action set (in
-		// Pending thing).
+		/* For unspecific reason Extra will be deliver 
+		 * when action set (inPending thing).
+		*/
 		intent.setAction("SomeAction");
-		// intent.putExtra("insertedId", insertedId);
 
 		Bundle extras = new Bundle();
-		extras.putString("insertedId", String.valueOf(insertedId));
+		extras.putString("insertedId", String.valueOf(sentences.getId()));
 		intent.putExtras(extras);
-		// TODO find what means PendingIntent.FLAG_CANCEL_CURRENT
+		
+		/*
+		 *PendingIntent.FLAG_CANCEL_CURRENT means if there is another
+		 *same PendingIntent cancel that. To have many different alarm it should provide 
+		 *different key. It has been done by id in sentence because that is uniqe.
+		 */
 		PendingIntent pendingIntent = PendingIntent
-				.getActivity(MainActivity.this, (int)Constant.generateUniqeCounter(), intent,
+				.getActivity(MainActivity.this, (int)sentences.getId(), intent,
 						PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		alarmManager.set(AlarmManager.RTC_WAKEUP,
@@ -169,7 +174,7 @@ public class MainActivity extends ListActivity {
 	    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int which) { 
 	        	
-	        	prepareAlarm(sentences.getId());
+	        	prepareAlarm(sentences);
 	        
 	        }
 	     })

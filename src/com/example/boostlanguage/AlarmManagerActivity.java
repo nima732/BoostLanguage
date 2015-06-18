@@ -8,11 +8,14 @@ import com.example.boostlanguage.DAO.SettingDAO;
 import com.example.boostlanguage.entity.Sentences;
 import com.example.boostlanguage.entity.Setting;
 import com.example.bootlanguage.util.Constant;
+import com.example.bootlanguage.util.ReminderUtility;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -110,21 +113,20 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 		}
 	}
 	
-	private void prepareAlarm(long insertedId,long time ) {
+	private void prepareAlarm(Sentences sentences,long time ) {
 		Log.i("AlarmManagerActivity", " @@@  time is " + time);
 		Intent intent = new Intent(AlarmManagerActivity.this,
 				AlarmManagerActivity.class);
 		// For unspecified reason Extra will be deliver when action set (in
 		// Pending thing).
 		intent.setAction("SomeAction");
-		// intent.putExtra("insertedId", insertedId);
 
 		Bundle extras = new Bundle();
-		extras.putString("insertedId", String.valueOf(insertedId));
+		extras.putString("insertedId", String.valueOf(sentences.getId()));
 		intent.putExtras(extras);
 		// TODO find what means PendingIntent.FLAG_CANCEL_CURRENT
 		PendingIntent pendingIntent = PendingIntent.getActivity(
-				AlarmManagerActivity.this, (int)Constant.generateUniqeCounter(), intent,
+				AlarmManagerActivity.this, (int)sentences.getId(), intent,
 				PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		alarmManager.set(AlarmManager.RTC_WAKEUP,
@@ -134,8 +136,8 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 			myToast.cancel();
 		}
 
-		myToast = Toast.makeText(AlarmManagerActivity.this, "set Alarm !!!" + time,
-				1000);
+		myToast = Toast.makeText(AlarmManagerActivity.this, "Correct answer was " + sentences.getWorldTrans() + " "+ ReminderUtility.convertTime(time),
+				2000);
 		myToast.show();
 	}
 
@@ -193,9 +195,11 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 
 	private void createReminder(Sentences sentences) {
 		if (check(sentences)){
-			prepareAlarm(sentences.getId(), System.currentTimeMillis() + (long)(fetchSetting().getNumberCorrectDay() * 24 * 60 * 60 * 1000));
+//			showDialogCorrect(sentences, System.currentTimeMillis() + (long)(fetchSetting().getNumberCorrectDay() * 24 * 60 * 60 * 1000));
+			prepareAlarm(sentences, System.currentTimeMillis() + (long)(fetchSetting().getNumberCorrectDay() * 24 * 60 * 60 * 1000));
 		}else {
-			prepareAlarm(sentences.getId() , System.currentTimeMillis() + (long)(fetchSetting().getNumberWrongDay() * 24 * 60 * 60 * 1000));
+//			showDialogWrong(sentences, System.currentTimeMillis() + (long)(fetchSetting().getNumberWrongDay() * 24 * 60 * 60 * 1000));
+			prepareAlarm(sentences , System.currentTimeMillis() + (long)(fetchSetting().getNumberWrongDay() * 24 * 60 * 60 * 1000));
 		}
 	}
 
@@ -255,6 +259,64 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 			}
 		}
 		return alert;
+	}
+	
+	private void showDialogCorrect(final Sentences sentences,final long time){
+
+		new AlertDialog.Builder(this)
+	    .setTitle("Check Answer")
+	    .setMessage("Your answer was correct next alarm would be at ")
+	    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+	        	
+//	        	prepareAlarm(sentences,time);
+	        
+	        }
+	     })
+	    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+
+				Log.i("AlarmManagerActivity", " @@@ stop alarm @@@");
+				if (mediaPlayer != null)
+				mediaPlayer.stop();
+				finish();
+
+	        	
+	        }
+	     })
+	    .setIcon(android.R.drawable.ic_dialog_alert)
+	     .show();
+
+	}
+
+	
+	private void showDialogWrong(final Sentences sentences,final long time){
+
+		new AlertDialog.Builder(this)
+	    .setTitle("Check Answer")
+	    .setMessage("Your answer was wrong the correct answer is \""+sentences.getWorldTrans() +"\n nest alarm will be at " + ReminderUtility.convertTime(time))
+	    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+	        	
+	        	prepareAlarm(sentences,time);
+
+	        	
+	        }
+	     })
+	    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+
+				Log.i("AlarmManagerActivity", " @@@ stop alarm @@@");
+				if (mediaPlayer != null)
+				mediaPlayer.stop();
+				finish();
+
+	        	
+	        }
+	     })
+	    .setIcon(android.R.attr.alertDialogIcon)
+	     .show();
+
 	}
 
 }
