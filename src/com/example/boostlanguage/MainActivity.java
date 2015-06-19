@@ -104,7 +104,7 @@ public class MainActivity extends ListActivity {
 	// TODO this preparAlarm and the other one in AlarmManagerActivity should become one.
 	private void prepareAlarm(Sentences sentences) {
 
-		long time = (long)setting.getNumberWrongDay() * 24 * 60 * 60 * 1000;
+		long time = System.currentTimeMillis()+ (long)setting.getNumberWrongDay() * 24 * 60 * 60 * 1000;
 		
 		Intent intent = new Intent(MainActivity.this,
 				AlarmManagerActivity.class);
@@ -127,7 +127,7 @@ public class MainActivity extends ListActivity {
 						PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		alarmManager.set(AlarmManager.RTC_WAKEUP,
-				System.currentTimeMillis() + time, pendingIntent);
+				 time, pendingIntent);
 
 		if (myToast != null) {
 			myToast.cancel();
