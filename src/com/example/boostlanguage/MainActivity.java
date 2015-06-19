@@ -104,6 +104,8 @@ public class MainActivity extends ListActivity {
 	// TODO this preparAlarm and the other one in AlarmManagerActivity should become one.
 	private void prepareAlarm(Sentences sentences) {
 
+		long time = System.currentTimeMillis() + (long)(setting.getNumberWrongDay() * 24 * 60 * 60 * 1000); 
+		
 		Intent intent = new Intent(MainActivity.this,
 				AlarmManagerActivity.class);
 		/* For unspecific reason Extra will be deliver 
@@ -125,13 +127,13 @@ public class MainActivity extends ListActivity {
 						PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		alarmManager.set(AlarmManager.RTC_WAKEUP,
-				System.currentTimeMillis() + (long)(setting.getNumberWrongDay() * 24 * 60 * 60 * 1000), pendingIntent);
+				time, pendingIntent);
 
 		if (myToast != null) {
 			myToast.cancel();
 		}
 
-		myToast = Toast.makeText(MainActivity.this, "set Alarm !!! Next alarm is at"+ ReminderUtility.convertTime(System.currentTimeMillis() + (long)(setting.getNumberWrongDay() * 24 * 60 * 60 * 1000)), 2500);
+		myToast = Toast.makeText(MainActivity.this, "set Alarm !!! Next alarm is at"+ ReminderUtility.convertTime(time), Toast.LENGTH_LONG);
 		myToast.show();
 	}
 

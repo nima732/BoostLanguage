@@ -88,6 +88,7 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 	public void onStop() {
 		super.onStop();
 		try{
+			finish();
 		wakeLock.release();
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -195,11 +196,11 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 
 	private void createReminder(Sentences sentences) {
 		if (check(sentences)){
-//			showDialogCorrect(sentences, System.currentTimeMillis() + (long)(fetchSetting().getNumberCorrectDay() * 24 * 60 * 60 * 1000));
-			prepareAlarm(sentences, System.currentTimeMillis() + (long)(fetchSetting().getNumberCorrectDay() * 24 * 60 * 60 * 1000));
+			showDialogCorrect(sentences, System.currentTimeMillis() + (long)(fetchSetting().getNumberCorrectDay() * 24 * 60 * 60 * 1000));
+//			prepareAlarm(sentences, System.currentTimeMillis() + (long)(fetchSetting().getNumberCorrectDay() * 24 * 60 * 60 * 1000));
 		}else {
-//			showDialogWrong(sentences, System.currentTimeMillis() + (long)(fetchSetting().getNumberWrongDay() * 24 * 60 * 60 * 1000));
-			prepareAlarm(sentences , System.currentTimeMillis() + (long)(fetchSetting().getNumberWrongDay() * 24 * 60 * 60 * 1000));
+			showDialogWrong(sentences, System.currentTimeMillis() + (long)(fetchSetting().getNumberWrongDay() * 24 * 60 * 60 * 1000));
+//			prepareAlarm(sentences , System.currentTimeMillis() + (long)(fetchSetting().getNumberWrongDay() * 24 * 60 * 60 * 1000));
 		}
 	}
 
@@ -213,7 +214,7 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 			createReminder(sentences);	
 			if (mediaPlayer != null)
 			mediaPlayer.stop();
-			finish();
+//			finish();
 			
 			break;
 		case R.id.stopAlarm :
@@ -265,11 +266,16 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 
 		new AlertDialog.Builder(this)
 	    .setTitle("Check Answer")
-	    .setMessage("Your answer was correct next alarm would be at ")
+	    .setMessage("Your answer was correct next alarm would be at "+ReminderUtility.convertTime(time))
 	    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int which) { 
 	        	
-//	        	prepareAlarm(sentences,time);
+	        	prepareAlarm(sentences,time);
+	        	
+	        	Log.i("AlarmManagerActivity", " @@@ stop alarm @@@");
+				if (mediaPlayer != null)
+				mediaPlayer.stop();
+				finish();
 	        
 	        }
 	     })
@@ -280,7 +286,6 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 				if (mediaPlayer != null)
 				mediaPlayer.stop();
 				finish();
-
 	        	
 	        }
 	     })
@@ -294,12 +299,17 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 
 		new AlertDialog.Builder(this)
 	    .setTitle("Check Answer")
-	    .setMessage("Your answer was wrong the correct answer is \""+sentences.getWorldTrans() +"\n nest alarm will be at " + ReminderUtility.convertTime(time))
+	    .setMessage("Your answer was wrong the correct answer is \""+sentences.getWorldTrans() +"\" \n nest alarm will be at " + ReminderUtility.convertTime(time))
 	    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int which) { 
 	        	
 	        	prepareAlarm(sentences,time);
 
+	           	Log.i("AlarmManagerActivity", " @@@ stop alarm @@@");
+	    				if (mediaPlayer != null)
+	    				mediaPlayer.stop();
+	    				finish();
+	    	
 	        	
 	        }
 	     })

@@ -34,47 +34,40 @@ public class ReminderUtility {
 		int hours = 0;
 		int minuts = 0;
 		int second = 0;
-		float milSecond = time / 1000;
-		if (milSecond < 60) {
-			return "Next alarm will be in " + days + ", " + minuts
-					+ " minutes, " + second + " Sencod, " + milSecond
-					+ " milSecond.";
+		second = (int) (time / 1000);
+		if (second < 60) {
+			return "Next alarm will be in " + days + " days, " + hours + " hours, " + minuts
+					+ " minutes, " + second + " Sencod." ;
 		} else {
-			second = (int) (milSecond / 60);
-
-			if (second < 60) {
-				return "Next alarm will be in " + days + ", " + minuts
-						+ " minutes, " + second + " Sencod, " + milSecond
-						+ " milSecond.";
+			minuts = (int) (second / 60);
+			second = (int) (time % 1000);
+			if (minuts < 60) {
+				return "Next alarm will be in " + days + " days, " + hours + " hours, " + minuts
+						+ " minutes, " + second + " Sencod." ;
 			} else {
-				minuts = second / 60;
-				if (minuts < 24){
+				hours = minuts / 60;
+				minuts =  (int) (second % 60);
+				if (hours < 24){
 
-					return "Next alarm will be in " + days + ", " + minuts
-							+ " minutes, " + second + " Sencod, " + milSecond
-							+ " milSecond.";
+					return "Next alarm will be in " + days + " days, " + hours + " hours, " + minuts
+							+ " minutes, " + second + " Sencod." ;
 
 				}else{
-					hours = minuts / 24;
-					
-					if (hours < 24){
+					days = hours / 24;
+					hours = minuts % 60;
+					if (days < 24){
 
-						return "Next alarm will be in " + days + ", " + minuts
-								+ " minutes, " + second + " Sencod, " + milSecond
-								+ " milSecond.";
+						return "Next alarm will be in " + days + " days, " + hours + " hours, " + minuts
+								+ " minutes, " + second + " Sencod." ;
 						
-					}else{
-						days = hours -24;
-						
-						return "Next alarm will be in " + days + ", " + minuts
-								+ " minutes, " + second + " Sencod, " + milSecond
-								+ " milSecond.";
-
 					}
 				}
 
 			}
 
 		}
+		return "Next alarm will be in " + days + " days, " + hours + " hours, " + minuts
+				+ " minutes, " + second + " Sencod." ;
+
 	}
 }
