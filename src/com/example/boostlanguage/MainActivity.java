@@ -7,6 +7,7 @@ import com.example.boostlanguage.DAO.SettingDAO;
 import com.example.boostlanguage.entity.Sentences;
 import com.example.boostlanguage.entity.Setting;
 import com.example.bootlanguage.util.Constant;
+import com.example.bootlanguage.util.ReminderUtility;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -103,6 +104,8 @@ public class MainActivity extends ListActivity {
 	// TODO this preparAlarm and the other one in AlarmManagerActivity should become one.
 	private void prepareAlarm(Sentences sentences) {
 
+		long time = (long)setting.getNumberWrongDay() * 24 * 60 * 60 * 1000;
+		
 		Intent intent = new Intent(MainActivity.this,
 				AlarmManagerActivity.class);
 		/* For unspecific reason Extra will be deliver 
@@ -124,13 +127,13 @@ public class MainActivity extends ListActivity {
 						PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		alarmManager.set(AlarmManager.RTC_WAKEUP,
-				System.currentTimeMillis() + (long)(setting.getNumberWrongDay() * 24 * 60 * 60 * 1000), pendingIntent);
+				System.currentTimeMillis() + time, pendingIntent);
 
 		if (myToast != null) {
 			myToast.cancel();
 		}
 
-		myToast = Toast.makeText(MainActivity.this, "set Alarm !!!", 1000);
+		myToast = Toast.makeText(MainActivity.this, "set Alarm !!! Next alarm is at "+ReminderUtility.convertTime(time), 2500);
 		myToast.show();
 	}
 

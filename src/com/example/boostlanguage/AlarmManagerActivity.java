@@ -137,7 +137,7 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 		}
 
 		myToast = Toast.makeText(AlarmManagerActivity.this, "Correct answer was " + sentences.getWorldTrans() + " "+ ReminderUtility.convertTime(time),
-				2000);
+				2500);
 		myToast.show();
 	}
 
