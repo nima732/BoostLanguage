@@ -7,3 +7,4 @@
 *.ap_
 */bin/*
 .classpath
+*.apk
