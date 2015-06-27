@@ -87,12 +87,13 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 
 	public void onStop() {
 		super.onStop();
-		try{
-			finish();
-		wakeLock.release();
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
+		
+//		try{
+//
+//			finish();
+//		}catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	private void playSound( Context context, Uri alert){

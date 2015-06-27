@@ -49,29 +49,42 @@ public class ReminderUtility {
 		int hours = 0;
 		int minuts = 0;
 		int second = 0;
-		second = (int) (time / 1000);
-		if (second < 60) {
+		int kharjeGhesmat = 0;
+		kharjeGhesmat = (int) (time / 1000);
+		if (kharjeGhesmat < 60) {
+			second = kharjeGhesmat;
 			return "Next alarm will be in " + days + " days, " + hours + " hours, " + minuts
 					+ " minutes, " + second + " Sencod." ;
 		} else {
-			minuts = (int) (second / 60);
-			second = (int) (time % 1000);
-			if (minuts < 60) {
+			second = (int) (time % 1000); 
+			time = kharjeGhesmat;
+			kharjeGhesmat = (int) (time / 60);
+			
+			if (kharjeGhesmat < 60) {
+				minuts = kharjeGhesmat;
+				
 				return "Next alarm will be in " + days + " days, " + hours + " hours, " + minuts
 						+ " minutes, " + second + " Sencod." ;
 			} else {
-				hours = minuts / 60;
-				minuts =  (int) (second % 60);
-				if (hours < 24){
-
+				minuts =  (int) (time % 60);
+				time = kharjeGhesmat;
+				kharjeGhesmat = (int) (time / 60);
+				
+				if (kharjeGhesmat < 24){
+					hours = kharjeGhesmat;
+					
 					return "Next alarm will be in " + days + " days, " + hours + " hours, " + minuts
 							+ " minutes, " + second + " Sencod." ;
 
 				}else{
-					days = hours / 24;
-					hours = minuts % 60;
+					hours = (int) (time % 24);
+					time = kharjeGhesmat;
+					kharjeGhesmat = (int) (time / 24) ;
+					
+					
 					if (days < 24){
-
+						days = kharjeGhesmat;
+						
 						return "Next alarm will be in " + days + " days, " + hours + " hours, " + minuts
 								+ " minutes, " + second + " Sencod." ;
 						
