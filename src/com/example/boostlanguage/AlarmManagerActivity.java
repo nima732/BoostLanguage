@@ -196,10 +196,10 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 
 	private void createReminder(Sentences sentences) {
 		if (check(sentences)){
-			showDialogCorrect(sentences, System.currentTimeMillis() + (long)(fetchSetting().getNumberCorrectDay() * 24 * 60 * 60 * 1000));
+			showDialogCorrect(sentences, System.currentTimeMillis() + (long)(fetchSetting().getNumberCorrectDay() * 24 * 60 * 60 * 1000) );
 //			prepareAlarm(sentences, System.currentTimeMillis() + (long)(fetchSetting().getNumberCorrectDay() * 24 * 60 * 60 * 1000));
 		}else {
-			showDialogWrong(sentences, System.currentTimeMillis() + (long)(fetchSetting().getNumberWrongDay() * 24 * 60 * 60 * 1000));
+			showDialogWrong(sentences, System.currentTimeMillis() + (long)(fetchSetting().getNumberWrongDay() * 24 * 60 * 60 * 1000) );
 //			prepareAlarm(sentences , System.currentTimeMillis() + (long)(fetchSetting().getNumberWrongDay() * 24 * 60 * 60 * 1000));
 		}
 	}

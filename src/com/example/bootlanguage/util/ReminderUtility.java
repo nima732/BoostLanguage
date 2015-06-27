@@ -1,12 +1,27 @@
 package com.example.bootlanguage.util;
 
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.example.boostlanguage.entity.Sentences;
 
 public class ReminderUtility {
 
 	public static final String numberOfday = "(\\d)+(\\/)?(\\d)*";
 
+	public static int genRandom(int min, int max){
+		return (int) (Math.random() * (max -min)); 
+	}
+	
 	public static boolean checkFormat(String str, String patternRegex)
 			throws Exception {
 
@@ -69,5 +84,34 @@ public class ReminderUtility {
 		return "Next alarm will be in " + days + " days, " + hours + " hours, " + minuts
 				+ " minutes, " + second + " Sencod." ;
 
+	}
+	
+	public static void  setAlaram(Context context,Sentences sentences,long time ){
+
+/*		
+		Log.i("AlarmManagerActivity", " @@@  time is " + time);
+		Intent intent = new Intent(context, context.class);
+		// For unspecified reason Extra will be deliver when action set (in
+		// Pending thing).
+		intent.setAction("SomeAction");
+
+		Bundle extras = new Bundle();
+		extras.putString("insertedId", String.valueOf(sentences.getId()));
+		intent.putExtras(extras);
+		PendingIntent pendingIntent = PendingIntent.getActivity(
+				context, (int)sentences.getId(), intent,
+				PendingIntent.FLAG_CANCEL_CURRENT);
+		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+		alarmManager.set(AlarmManager.RTC_WAKEUP,
+				time, pendingIntent);
+
+		if (myToast != null) {
+			myToast.cancel();
+		}
+
+		myToast = Toast.makeText(AlarmManagerActivity.this, "Correct answer was " + sentences.getWorldTrans() + " "+ ReminderUtility.convertTime(time),
+				2500);
+		myToast.show();
+*/		
 	}
 }
