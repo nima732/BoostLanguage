@@ -1,5 +1,7 @@
 package com.example.boostlanguage;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.example.boostlanguage.DAO.SentencesDAO;
@@ -7,9 +9,11 @@ import com.example.boostlanguage.DAO.SettingDAO;
 import com.example.boostlanguage.entity.Sentences;
 import com.example.boostlanguage.entity.Setting;
 import com.example.bootlanguage.util.Constant;
+import com.example.bootlanguage.util.ListViewAdapters;
 import com.example.bootlanguage.util.ReminderUtility;
 
 import android.os.Bundle;
+import android.R.anim;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -33,7 +37,10 @@ public class MainActivity extends ListActivity {
 	private Toast myToast;
 	private SettingDAO settingDAO;
 	Setting setting = null;
+	ListView listView;
 
+	private ArrayList<HashMap<String, String>> hashMaps;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,16 +54,27 @@ public class MainActivity extends ListActivity {
 		sentencesText = (EditText) findViewById(R.id.sentensTxt);
 		transText = (EditText) findViewById(R.id.transTXT);
 
+		listView=(ListView)findViewById(android.R.id.list);
+		
+		
 		List<Sentences> values = sentencesDAO.getAllSentences();
 
 		// sentencesDAO.deleteAll();
 
 		values = sentencesDAO.getAllSentences();
+		
+		hashMaps=new ArrayList<HashMap<String,String>>();
+		
+		ReminderUtility.convertlistToHashMap(hashMaps, values);
 		// use the SimpleCursorAdapter to show the
 		// elements in a ListView
-		ArrayAdapter<Sentences> adapter = new ArrayAdapter<Sentences>(this,
-				android.R.layout.simple_list_item_1, values);
-		setListAdapter(adapter);
+//		ArrayAdapter<Sentences> adapter = new ArrayAdapter<Sentences>(this,
+//				android.R.layout.simple_list_item_1, values);
+//		setListAdapter(adapter);
+		
+		ListViewAdapters adapter=new ListViewAdapters(this, hashMaps);
+		listView.setAdapter(adapter);
+
 	}
 
 	@Override
@@ -68,8 +86,20 @@ public class MainActivity extends ListActivity {
 
 	public void saveWorld(View view){
 		
-		ArrayAdapter<Sentences> adapter = (ArrayAdapter<Sentences>) getListAdapter();
+//		ArrayAdapter<Sentences> adapter = (ArrayAdapter<Sentences>) getListAdapter();
+		
+		
 		Sentences sentences = null;
+				
+		if (!ifSettingSets()){
+			Toast toast = Toast.makeText(this, "Please first set the setting",
+					1500);
+			toast.show();
+			return;
+		}
+
+		
+		long time = System.currentTimeMillis() + (long)(setting.getNumberWrongDay() * 24 * 60 * 60 * 1000);
 		
 		String sentencesTXT =  sentencesText.getText().toString();
 		String transTxt = transText.getText().toString();
@@ -77,19 +107,23 @@ public class MainActivity extends ListActivity {
 		Log.i(" MainActivity ", sentencesTXT);
 		Log.i(" MainActivity ", transTxt);
 
-		sentences = new Sentences(sentencesTXT,transTxt);
+		sentences = new Sentences(sentencesTXT,transTxt,time);
 		
-		if (!ifSettingSets()){
-			Toast toast = Toast.makeText(this, "Please first set the setting",
-					1500);
-			toast.show();
-			return;
-		}
 		
 		sentences = sentencesDAO.insertRow(sentences);
-		adapter.add(sentences);
 		
-		prepareAlarm( sentences);
+		listView=(ListView)findViewById(android.R.id.list);
+		ListViewAdapters adapter2 = (ListViewAdapters) listView.getAdapter();
+
+		HashMap<String,String> temp=new HashMap<String, String>();
+		temp.put(Constant.FIRST_COLUMN, sentences.getWorld());
+		temp.put(Constant.SECOND_COLUMN, sentences.getWorldTrans());
+		temp.put(Constant.THIRD_COLUMN, String.valueOf(ReminderUtility.showReadableTime(sentences.getTime())));
+
+		
+		adapter2.add(temp);
+		
+		prepareAlarm( sentences,time );
 		
 		System.out.println("@@@@@@@");
 	}
@@ -102,9 +136,8 @@ public class MainActivity extends ListActivity {
 	}
 
 	// TODO this preparAlarm and the other one in AlarmManagerActivity should become one.
-	private void prepareAlarm(Sentences sentences) {
-
-		long time = System.currentTimeMillis() + (long)(setting.getNumberWrongDay() * 24 * 60 * 60 * 1000); 
+	private void prepareAlarm(Sentences sentences,long time) {
+		 
 		
 		Intent intent = new Intent(MainActivity.this,
 				AlarmManagerActivity.class);
@@ -129,6 +162,9 @@ public class MainActivity extends ListActivity {
 		alarmManager.set(AlarmManager.RTC_WAKEUP,
 				time, pendingIntent);
 
+		sentences.setTime(time);
+		sentencesDAO.updateRows(sentences);
+		
 		if (myToast != null) {
 			myToast.cancel();
 		}
@@ -164,10 +200,11 @@ public class MainActivity extends ListActivity {
 		}
 		
 		//get selected items
-		Sentences sentences =  (Sentences) getListAdapter().getItem(position);
+//		Sentences sentences =  (Sentences) getListAdapter().getItem(position);
+		Sentences sentences =  ReminderUtility.convertHashMapToSentences((HashMap<String, String>) listView.getAdapter().getItem(position));
+		
 		
 		dialogSetAlarm(sentences);
- 
 	}
 	
 	public void dialogSetAlarm(final Sentences sentences){
@@ -176,9 +213,10 @@ public class MainActivity extends ListActivity {
 	    .setMessage("Are you sure you want to reset the alarm for " + sentences.getWorld())
 	    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int which) { 
-	        	
-	        	prepareAlarm(sentences);
-	        
+
+	        	long time = System.currentTimeMillis() + (long)(setting.getNumberWrongDay() * 24 * 60 * 60 * 1000);
+	        	prepareAlarm(sentences,time);
+	        	onResume();
 	        }
 	     })
 	    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -188,6 +226,27 @@ public class MainActivity extends ListActivity {
 	     })
 	    .setIcon(android.R.drawable.ic_dialog_alert)
 	     .show();
+		
+	}
+
+	@Override
+	public void onResume(){
+		super.onResume();
+		
+		listView=(ListView)findViewById(android.R.id.list);
+		
+		
+		List<Sentences> values = sentencesDAO.getAllSentences();
+
+
+		values = sentencesDAO.getAllSentences();
+		
+		hashMaps=new ArrayList<HashMap<String,String>>();
+		
+		ReminderUtility.convertlistToHashMap(hashMaps, values);
+		
+		ListViewAdapters adapter=new ListViewAdapters(this, hashMaps);
+		listView.setAdapter(adapter);
 
 	}
 	

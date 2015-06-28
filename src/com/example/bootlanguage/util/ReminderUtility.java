@@ -1,5 +1,8 @@
 package com.example.bootlanguage.util;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -127,4 +130,45 @@ public class ReminderUtility {
 		myToast.show();
 */		
 	}
+	
+	public static ArrayList<HashMap<String, String>> convertlistToHashMap(ArrayList<HashMap<String, String>> hashMaps, List<Sentences> sentences){
+		for (Sentences value: sentences){
+		
+			HashMap<String,String> temp=new HashMap<String, String>();
+			temp.put(Constant.FIRST_COLUMN, value.getWorld());
+			temp.put(Constant.SECOND_COLUMN, value.getWorldTrans());
+			temp.put(Constant.THIRD_COLUMN, String.valueOf( showReadableTime(value.getTime())));
+			temp.put(Constant.COLUMN_ID, String.valueOf(value.getId()));
+		hashMaps.add(temp);
+
+			
+		}
+		
+		return hashMaps;
+		
+	}
+	
+	public static String showReadableTime(long time){
+		return (time == 0)? "Not set" : ReminderUtility.convertTime(time );
+	}
+	
+	public static Sentences convertHashMapToSentences(HashMap<String, String> hashMap){
+
+//		HashMap<String, String> hashMap = new HashMap<String, String>();
+		Sentences sentences = new Sentences();
+//		for (int i = 0; i <= hashMaps.size(); i++){
+		
+			
+//			hashMap = hashMaps.get(i);
+			sentences.setWorld(hashMap.get(Constant.FIRST_COLUMN));
+			sentences.setWorldTrans(hashMap.get(Constant.SECOND_COLUMN));
+			sentences.setId(Integer.valueOf(hashMap.get(Constant.COLUMN_ID)));
+//		}
+			
+		
+		return sentences;
+		
+	}
+
 }
+

@@ -87,7 +87,7 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 
 	public void onStop() {
 		super.onStop();
-		
+		wakeLock.release();
 //		try{
 //
 //			finish();
@@ -134,6 +134,10 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 		alarmManager.set(AlarmManager.RTC_WAKEUP,
 				time, pendingIntent);
 
+		sentences.setTime(time);
+		sentencesDAO.updateRows(sentences);
+
+		
 		if (myToast != null) {
 			myToast.cancel();
 		}
@@ -220,6 +224,9 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 			break;
 		case R.id.stopAlarm :
 			Log.i("AlarmManagerActivity", " @@@ stop alarm @@@");
+			
+			resetTimeGUI();
+			
 			if (mediaPlayer != null)
 			mediaPlayer.stop();
 			finish();
@@ -284,6 +291,9 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 	        public void onClick(DialogInterface dialog, int which) { 
 
 				Log.i("AlarmManagerActivity", " @@@ stop alarm @@@");
+			
+				resetTimeGUI();
+				
 				if (mediaPlayer != null)
 				mediaPlayer.stop();
 				finish();
@@ -318,6 +328,9 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 	        public void onClick(DialogInterface dialog, int which) { 
 
 				Log.i("AlarmManagerActivity", " @@@ stop alarm @@@");
+				
+				resetTimeGUI();
+				
 				if (mediaPlayer != null)
 				mediaPlayer.stop();
 				finish();
@@ -327,6 +340,12 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 	     })
 	    .setIcon(android.R.attr.alertDialogIcon)
 	     .show();
+
+	}
+	
+	private void resetTimeGUI(){
+		sentences.setTime(0);
+		sentencesDAO.updateRows(sentences);
 
 	}
 

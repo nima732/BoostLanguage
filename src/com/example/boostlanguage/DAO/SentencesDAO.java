@@ -18,7 +18,7 @@ public class SentencesDAO {
 	private SQLiteDatabase database;
 	private SQLiteHelper dbHelper;
 	private String[] allColumns = { SQLiteHelper.COLUMN_NAME_ID,
-			SQLiteHelper.COLUMN_NAME_MAIN_SEN, SQLiteHelper.COLUMN_NAME_TRANS };
+			SQLiteHelper.COLUMN_NAME_MAIN_SEN, SQLiteHelper.COLUMN_NAME_TRANS , SQLiteHelper.COLUMN_NAME_TIME};
 
 	public SentencesDAO(Context context) {
 		Log.i(Sentences.class.getName(), ">>>>> SentencesDAO");
@@ -57,6 +57,7 @@ public class SentencesDAO {
 		return sentences;
 	}
 
+//	TODO should add time 
 	public Sentences createSentences(String world) {
 		Log.i(Sentences.class.getName(), ">>>>> createSentences");
 		ContentValues values = new ContentValues();
@@ -77,6 +78,7 @@ public class SentencesDAO {
 		ContentValues values = new ContentValues();
 		values.put(SQLiteHelper.COLUMN_NAME_MAIN_SEN, sentences.getWorld());
 		values.put(SQLiteHelper.COLUMN_NAME_TRANS, sentences.getWorldTrans());
+		values.put(SQLiteHelper.COLUMN_NAME_TIME, sentences.getTime());
 		long insertId = database.insert(SQLiteHelper.TABLE_NAME, null, values);
 		Log.i("insertId : ", String.valueOf(insertId));
 		Cursor cursor = database.query(SQLiteHelper.TABLE_NAME, allColumns,
@@ -115,12 +117,34 @@ public class SentencesDAO {
 		cursor.close();
 		return sentenceses;
 	}
+	
+	public void updateRows(Sentences sentences){
+		
+		Log.i(SentencesDAO.class.getName(), ">>>>> update a row");
+		ContentValues values = new ContentValues();
+		values.put(SQLiteHelper.COLUMN_NAME_MAIN_SEN, sentences.getWorld());
+		values.put(SQLiteHelper.COLUMN_NAME_TRANS, sentences.getWorldTrans());
+		values.put(SQLiteHelper.COLUMN_NAME_TIME, sentences.getTime());
+		long insertId = database.update(SQLiteHelper.TABLE_NAME, values, SQLiteHelper.COLUMN_NAME_ID + " = " + sentences.getId() ,null);
+		
+		
+		Log.i("update : ", String.valueOf(insertId));
+		Cursor cursor = database.query(SQLiteHelper.TABLE_NAME, allColumns,
+				SQLiteHelper.COLUMN_NAME_ID + " = " + insertId, null, null,
+				null, null);
+		cursor.moveToFirst();
+//		Sentences updatedSentences = cursorToSentences(cursor);
+		cursor.close();
+
+//		return updatedSentences;
+	}
 
 	private Sentences cursorToSentences(Cursor cursor) {
 		Sentences sentences = new Sentences();
 		sentences.setId(cursor.getLong(0));
 		sentences.setWorld(cursor.getString(1));
 		sentences.setWorldTrans(cursor.getString(2));
+		sentences.setTime(cursor.getLong(3));
 		return sentences;
 	}
 }
