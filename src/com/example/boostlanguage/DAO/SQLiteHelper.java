@@ -11,6 +11,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
   public static final String COLUMN_NAME_ID = "id";
   public static final String COLUMN_NAME_MAIN_SEN = "world";
   public static final String COLUMN_NAME_TRANS = "worldTrans";
+  public static final String COLUMN_NAME_TIME = "time";
 
   public static final String TABLE_NAME_setting = "setting";
   public static final String COLUMN_NAME_ID_SETTING = "id";
@@ -18,13 +19,13 @@ public class SQLiteHelper extends SQLiteOpenHelper {
   public static final String wrong_answer = "wrong_answer";
   
   private static final String DATABASE_NAME = "sentences.db";
-  private static final int DATABASE_VERSION = 6;
+  private static final int DATABASE_VERSION = 7;
 
   // Database creation sql statement
   private static final String DATABASE_CREATE = "create table "
       + TABLE_NAME + "(" + COLUMN_NAME_ID
       + " integer primary key autoincrement, " + COLUMN_NAME_MAIN_SEN
-      + " text not null, " + COLUMN_NAME_TRANS 
+      + " text not null, " + COLUMN_NAME_TRANS + ", " + COLUMN_NAME_TIME
       + ");";
 
   private static final String DATABASE_CREATE_setting = "create table "
