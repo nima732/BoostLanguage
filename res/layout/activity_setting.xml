@@ -66,13 +66,29 @@
                 android:ems="10" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/settingSave"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/LinearLayout1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:onClick="saveSetting"
-            android:text="@string/btnsettingSave" />
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/settingSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"                
+                android:onClick="saveSetting"
+                android:text="@string/btnsettingSave" />
+             <Button
+                android:id="@+id/datepicker"
+                android:layout_width="wrap_content"                
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:onClick="pickTime"
+                android:text="@string/btnsettingdatepicker" />
+            
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -94,8 +110,8 @@
         <Button
             android:id="@+id/settingClearData"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"  
-            android:onClick="settingClearData"          
+            android:layout_height="wrap_content"
+            android:onClick="settingClearData"
             android:text="@string/settingClearData" />
     </LinearLayout>
 
