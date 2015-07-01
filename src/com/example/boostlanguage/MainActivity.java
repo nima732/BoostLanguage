@@ -250,4 +250,30 @@ public class MainActivity extends ListActivity {
 
 	}
 	
+	private boolean ifAlarmExist(Sentences sentences){
+		
+		Intent intent = new Intent(MainActivity.this,
+				AlarmManagerActivity.class);
+		/* For unspecific reason Extra will be deliver 
+		 * when action set (inPending thing).
+		*/
+		intent.setAction("SomeAction");
+
+		Bundle extras = new Bundle();
+		extras.putString("insertedId", String.valueOf(sentences.getId()));
+		intent.putExtras(extras);
+		
+		boolean exist = (PendingIntent
+				.getActivity(MainActivity.this, (int)sentences.getId(), intent,
+						PendingIntent.FLAG_NO_CREATE) != null);
+		if (exist) {
+			return exist;
+		}else {
+			return (PendingIntent
+					.getActivity(MainActivity.this, (int)sentences.getId(), intent,
+							PendingIntent.FLAG_NO_CREATE) != null);
+		}
+		
+	}
+	
 }
