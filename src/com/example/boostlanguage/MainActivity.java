@@ -63,18 +63,6 @@ public class MainActivity extends ListActivity {
 
 		values = sentencesDAO.getAllSentences();
 		
-		for (Sentences sentences : values){
-			System.out.println(" %%%%%%%<<<%%%%"+ ifAlarmExist(sentences));
-			if (!ifAlarmExist(sentences)){
-				long isValidTime = sentences.getTime() - System.currentTimeMillis();
-				if (isValidTime > 0){
-					prepareAlarm(sentences, sentences.getTime());
-				}
-			}
-			
-		}
-
-		
 		hashMaps=new ArrayList<HashMap<String,String>>();
 		
 		ReminderUtility.convertlistToHashMap(hashMaps, values);
@@ -252,7 +240,7 @@ public class MainActivity extends ListActivity {
 
 
 		values = sentencesDAO.getAllSentences();
-				
+		
 		hashMaps=new ArrayList<HashMap<String,String>>();
 		
 		ReminderUtility.convertlistToHashMap(hashMaps, values);
@@ -260,31 +248,6 @@ public class MainActivity extends ListActivity {
 		ListViewAdapters adapter=new ListViewAdapters(this, hashMaps);
 		listView.setAdapter(adapter);
 
-	}
-	
-	private boolean ifAlarmExist(Sentences sentences){
-		
-		Intent intent = new Intent(MainActivity.this,
-				AlarmManagerActivity.class);
-		/* For unspecific reason Extra will be deliver 
-		 * when action set (inPending thing).
-		*/
-		intent.setAction("SomeAction");
-
-		Bundle extras = new Bundle();
-		extras.putString("insertedId", String.valueOf(sentences.getId()));
-		intent.putExtras(extras);
-		
-		boolean exist = (PendingIntent
-				.getActivity(MainActivity.this, (int)sentences.getId(), intent,
-						PendingIntent.FLAG_NO_CREATE) != null);
-		if (exist) {
-			return exist;
-		}else {
-			return (PendingIntent
-					.getActivity(MainActivity.this, (int)sentences.getId(), intent,
-							PendingIntent.FLAG_NO_CREATE) != null);
-		}
 	}
 	
 }
