@@ -232,7 +232,7 @@ public class MainActivity extends ListActivity {
 	@Override
 	public void onResume(){
 		super.onResume();
-		
+
 		listView=(ListView)findViewById(android.R.id.list);
 		
 		
