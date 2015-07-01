@@ -60,13 +60,15 @@ public class ListViewAdapters extends BaseAdapter {
 			txtFirst=(TextView) convertView.findViewById(R.id.clomRowWold);
 			txtSecond=(TextView) convertView.findViewById(R.id.clomnRowTransWorld);
 			txtThird=(TextView) convertView.findViewById(R.id.clomnRowDate);
+
+			
+			HashMap<String, String> map=mylist.get(position);
+			txtFirst.setText(map.get(Constant.FIRST_COLUMN));
+			txtSecond.setText(map.get(Constant.SECOND_COLUMN));
+			txtThird.setText(map.get(Constant.THIRD_COLUMN));
 			
 		}
 		
-		HashMap<String, String> map=mylist.get(position);
-		txtFirst.setText(map.get(Constant.FIRST_COLUMN));
-		txtSecond.setText(map.get(Constant.SECOND_COLUMN));
-		txtThird.setText(map.get(Constant.THIRD_COLUMN));
 		
 		return convertView;
 	
