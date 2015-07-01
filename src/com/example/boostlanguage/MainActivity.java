@@ -285,6 +285,7 @@ public class MainActivity extends ListActivity {
 					.getActivity(MainActivity.this, (int)sentences.getId(), intent,
 							PendingIntent.FLAG_NO_CREATE) != null);
 		}
+		
 	}
 	
 }

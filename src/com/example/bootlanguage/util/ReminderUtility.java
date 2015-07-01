@@ -163,6 +163,7 @@ public class ReminderUtility {
 			sentences.setWorld(hashMap.get(Constant.FIRST_COLUMN));
 			sentences.setWorldTrans(hashMap.get(Constant.SECOND_COLUMN));
 			sentences.setId(Integer.valueOf(hashMap.get(Constant.COLUMN_ID)));
+			
 //		}
 			
 		
