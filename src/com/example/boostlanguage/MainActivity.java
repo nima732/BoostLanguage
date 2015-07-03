@@ -10,6 +10,7 @@ import com.example.boostlanguage.entity.Sentences;
 import com.example.boostlanguage.entity.Setting;
 import com.example.bootlanguage.util.Constant;
 import com.example.bootlanguage.util.ListViewAdapters;
+import com.example.bootlanguage.util.ListViewAdapters2;
 import com.example.bootlanguage.util.ReminderUtility;
 
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -62,6 +64,7 @@ public class MainActivity extends ListActivity {
 		// sentencesDAO.deleteAll();
 
 		values = sentencesDAO.getAllSentences();
+
 		
 		hashMaps=new ArrayList<HashMap<String,String>>();
 		
@@ -75,6 +78,10 @@ public class MainActivity extends ListActivity {
 		ListViewAdapters adapter=new ListViewAdapters(this, hashMaps);
 		listView.setAdapter(adapter);
 
+/*
+		ListAdapter adapter2 = new ListViewAdapters2(this,R.layout.clomn_row, values);
+		listView.setAdapter(adapter2);
+*/
 	}
 
 	@Override

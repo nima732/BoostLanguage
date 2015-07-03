@@ -7,6 +7,7 @@ import com.example.boostlanguage.R;
 import com.example.boostlanguage.entity.Sentences;
 
 import android.app.Activity;
+import android.content.ClipData.Item;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,12 +50,41 @@ public class ListViewAdapters extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 
-	
-		LayoutInflater inflater=activity.getLayoutInflater();
+//		View view = convertView;
+//		
+//		if (view == null){
+//			LayoutInflater layoutInflater ;
+//			layoutInflater = activity.getLayoutInflater();
+//			view = layoutInflater.inflate(R.layout.clomn_row, null);
+//			txtFirst=(TextView) view.findViewById(R.id.clomRowWold);
+//			txtSecond=(TextView) view.findViewById(R.id.clomnRowTransWorld);
+//			txtThird=(TextView) view.findViewById(R.id.clomnRowDate);
+//
+//		}
+//		
+//		Item item = (Item) getItem(position);
 		
-		if(convertView == null){
+//		if (view != null){
+//			txtFirst=(TextView) convertView.findViewById(R.id.clomRowWold);
+//			txtSecond=(TextView) convertView.findViewById(R.id.clomnRowTransWorld);
+//			txtThird=(TextView) convertView.findViewById(R.id.clomnRowDate);
+//			
+//		}
+//		
+//		HashMap<String, String> map=mylist.get(position);
+//		txtFirst.setText(map.get(Constant.FIRST_COLUMN));
+//		txtSecond.setText(map.get(Constant.SECOND_COLUMN));
+//		txtThird.setText(map.get(Constant.THIRD_COLUMN));
+
+        View v = convertView;
+         
+
+
+		HashMap<String, String> hashMap =  (HashMap<String, String>) getItem(position);
+		
+		if(hashMap != null){
 			
-			
+			LayoutInflater	inflater=activity.getLayoutInflater();
 			convertView=inflater.inflate(R.layout.clomn_row, null);
 			
 			txtFirst=(TextView) convertView.findViewById(R.id.clomRowWold);
@@ -62,12 +92,23 @@ public class ListViewAdapters extends BaseAdapter {
 			txtThird=(TextView) convertView.findViewById(R.id.clomnRowDate);
 
 			
-			HashMap<String, String> map=mylist.get(position);
-			txtFirst.setText(map.get(Constant.FIRST_COLUMN));
-			txtSecond.setText(map.get(Constant.SECOND_COLUMN));
-			txtThird.setText(map.get(Constant.THIRD_COLUMN));
+            if (txtFirst != null) {
+                txtFirst.setText(hashMap.get((Constant.FIRST_COLUMN)));
+            }
+
+            if (txtSecond != null) {
+                txtSecond.setText(hashMap.get(Constant.SECOND_COLUMN));
+            }
+
+            if (txtThird != null) {
+                txtThird.setText(hashMap.get(Constant.THIRD_COLUMN));
+            }
+
 			
+
 		}
+		
+
 		
 		
 		return convertView;
