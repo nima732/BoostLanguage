@@ -138,6 +138,22 @@ public class SentencesDAO {
 
 //		return updatedSentences;
 	}
+	
+	public long getMaxTime(){
+
+		long maxTime = 0;
+		Cursor cursor = database.rawQuery("select max("+ SQLiteHelper.COLUMN_NAME_TIME +") from "
+				+ SQLiteHelper.TABLE_NAME + " group by " + SQLiteHelper.COLUMN_NAME_TIME, null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			maxTime	 =  cursor.getLong(0);
+		}
+		// make sure to close the cursor
+		cursor.close();
+		return maxTime;
+		
+	}
 
 	private Sentences cursorToSentences(Cursor cursor) {
 		Sentences sentences = new Sentences();

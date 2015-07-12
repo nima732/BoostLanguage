@@ -222,6 +222,7 @@ public class MainActivity extends ListActivity {
 	        public void onClick(DialogInterface dialog, int which) { 
 
 	        	long time = System.currentTimeMillis() + (long)(setting.getNumberWrongDay() * 24 * 60 * 60 * 1000);
+//	        	System.out.println(sentencesDAO.getMaxTime());
 	        	prepareAlarm(sentences,time);
 	        	onResume();
 	        }
@@ -282,5 +283,5 @@ public class MainActivity extends ListActivity {
 		}
 		
 	}
-	
+		
 }
