@@ -101,6 +101,10 @@ public class SentencesDAO {
 		database.delete(SQLiteHelper.TABLE_NAME, null, null);
 	}
 
+	public void deleteAll(String notification) {
+		database.delete(SQLiteHelper.TABLE_NAME_NOTIFI, null, null);
+	}
+
 	public List<Sentences> getAllSentences() {
 		List<Sentences> sentenceses = new ArrayList<Sentences>();
 
@@ -137,6 +141,43 @@ public class SentencesDAO {
 		cursor.close();
 
 //		return updatedSentences;
+	}
+	
+	public List<Sentences> getAllNotificationSentences() {
+		List<Sentences> sentenceses = new ArrayList<Sentences>();
+
+		Cursor cursor = database.query(SQLiteHelper.TABLE_NAME_NOTIFI, allColumns,
+				null, null, null, null, null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Sentences sentences = cursorToSentences(cursor);
+			sentenceses.add(sentences);
+			cursor.moveToNext();
+		}
+		// make sure to close the cursor
+		cursor.close();
+		
+		deleteAll("Notifications");
+		return sentenceses;
+	}
+	
+	public Sentences insertRowNotifi(Sentences sentences) {
+		Log.i(Sentences.class.getName(), ">>>>> insert a Notifi");
+		ContentValues values = new ContentValues();
+		values.put(SQLiteHelper.COLUMN_NAME_ID, sentences.getId());
+		values.put(SQLiteHelper.COLUMN_NAME_MAIN_SEN, sentences.getWorld());
+		values.put(SQLiteHelper.COLUMN_NAME_TRANS, sentences.getWorldTrans());
+		values.put(SQLiteHelper.COLUMN_NAME_TIME, sentences.getTime());
+		long insertId = database.insert(SQLiteHelper.TABLE_NAME_NOTIFI, null, values);
+		Log.i("insertId : ", String.valueOf(sentences.getId()));
+		Cursor cursor = database.query(SQLiteHelper.TABLE_NAME_NOTIFI, allColumns,
+				SQLiteHelper.COLUMN_NAME_ID + " = " + sentences.getId(), null, null,
+				null, null);
+		cursor.moveToFirst();
+		Sentences newSentence = cursorToSentences(cursor);
+		cursor.close();
+		return newSentence;
 	}
 	
 	public long getMaxTime(){

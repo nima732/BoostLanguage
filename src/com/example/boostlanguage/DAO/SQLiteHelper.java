@@ -13,13 +13,15 @@ public class SQLiteHelper extends SQLiteOpenHelper {
   public static final String COLUMN_NAME_TRANS = "worldTrans";
   public static final String COLUMN_NAME_TIME = "time";
 
+  public static final String TABLE_NAME_NOTIFI = "sentences_notifi";
+  
   public static final String TABLE_NAME_setting = "setting";
   public static final String COLUMN_NAME_ID_SETTING = "id";
   public static final String correct_answer = "correctAnswer";
   public static final String wrong_answer = "wrong_answer";
   
   private static final String DATABASE_NAME = "sentences.db";
-  private static final int DATABASE_VERSION = 7;
+  private static final int DATABASE_VERSION = 9;
 
   // Database creation sql statement
   private static final String DATABASE_CREATE = "create table "
@@ -34,6 +36,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	      + " text not null, " + wrong_answer
 	      + ");";
 
+  private static final String DATABASE_CREATE_NOTIFI = "create table "
+	      + TABLE_NAME_NOTIFI + "(" + COLUMN_NAME_ID
+	      + " not null, " + COLUMN_NAME_MAIN_SEN
+	      + " text not null, " + COLUMN_NAME_TRANS + ", " + COLUMN_NAME_TIME
+	      + ");";
+
   
   public SQLiteHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -44,6 +52,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	  Log.i(SQLiteHelper.class.getName(), ">>>>>>>>>>> onCreate >>>");
 	  database.execSQL(DATABASE_CREATE);
 	  database.execSQL(DATABASE_CREATE_setting);
+	  database.execSQL(DATABASE_CREATE_NOTIFI);
+	  
   }
 
   @Override
@@ -53,6 +63,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             + newVersion + ", which will destroy all old data");
     db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
     db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_setting);
+    db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_NOTIFI);
     onCreate(db);
   }
 

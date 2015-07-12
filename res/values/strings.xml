@@ -20,6 +20,6 @@
     <string name="settingClearData">Clear</string>
     <string name="settingClearDatatxt">Do you want to clear all the sentences ?</string>
     <string name="btnsettingdatepicker">Choose time</string>
-    
+    <string name="title_activity_notification_alarm">NotificationAlarm</string>
 
 </resources>

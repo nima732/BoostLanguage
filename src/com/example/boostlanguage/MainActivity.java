@@ -63,8 +63,6 @@ public class MainActivity extends ListActivity {
 
 		// sentencesDAO.deleteAll();
 
-		values = sentencesDAO.getAllSentences();
-
 		
 		hashMaps=new ArrayList<HashMap<String,String>>();
 		
