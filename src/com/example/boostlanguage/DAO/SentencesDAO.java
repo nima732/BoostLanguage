@@ -183,13 +183,13 @@ public class SentencesDAO {
 	public long getMaxTime(){
 
 		long maxTime = 0;
-		Cursor cursor = database.rawQuery("select max("+ SQLiteHelper.COLUMN_NAME_TIME +") from "
+		Cursor cursor = database.rawQuery("select max( "+ SQLiteHelper.COLUMN_NAME_TIME +" ) as maxTime from "
 				+ SQLiteHelper.TABLE_NAME + " group by " + SQLiteHelper.COLUMN_NAME_TIME, null);
 
 		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
+//		while (!cursor.isAfterLast()) {
 			maxTime	 =  cursor.getLong(0);
-		}
+//		}
 		// make sure to close the cursor
 		cursor.close();
 		return maxTime;

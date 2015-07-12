@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.boostlanguage.DAO.SentencesDAO;
 import com.example.boostlanguage.entity.Sentences;
 
 public class ReminderUtility {
@@ -116,7 +117,7 @@ public class ReminderUtility {
 		intent.putExtras(extras);
 		PendingIntent pendingIntent = PendingIntent.getActivity(
 				context, (int)sentences.getId(), intent,
-				PendingIntent.FLAG_CANCEL_CURRENT);
+				PendingIntent.FLAG_CANCEL_CURRENT);1436736501285
 		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		alarmManager.set(AlarmManager.RTC_WAKEUP,
 				time, pendingIntent);
@@ -170,6 +171,25 @@ public class ReminderUtility {
 		return sentences;
 		
 	}
+	
+	
+	/**
+	 * To avoid conflict.
+	 * @param time
+	 * @return
+	 */
+	public static long checkTimeConflict(long time, SentencesDAO sentencesDAO) {
+
+		
+		long maxTime = sentencesDAO.getMaxTime();
+		System.out.println(maxTime);
+		if ((maxTime + (1000 * 60 * 10)) >= time) {
+			time = (maxTime + (1000 * 60 * 10));
+		}
+		
+		return time;
+	}
+
 
 }
 

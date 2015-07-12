@@ -281,15 +281,17 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 		return alert;
 	}
 	
-	private void showDialogCorrect(final Sentences sentences,final long time){
+	private void showDialogCorrect(final Sentences sentences,long time){
 
+		final long thisTime = ReminderUtility.checkTimeConflict(time,sentencesDAO);
+		
 		new AlertDialog.Builder(this)
 	    .setTitle("Check Answer")
-	    .setMessage("Your answer was correct next alarm would be at "+ReminderUtility.convertTime(time))
+	    .setMessage("Your answer was correct next alarm would be at "+ReminderUtility.convertTime(thisTime))
 	    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int which) { 
-	        	
-	        	prepareAlarm(sentences,time);
+	        		        	
+	        	prepareAlarm(sentences,thisTime);
 	        	
 	        	Log.i("AlarmManagerActivity", " @@@ stop alarm @@@");
 				if (mediaPlayer != null)
@@ -317,15 +319,18 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 	}
 
 	
-	private void showDialogWrong(final Sentences sentences,final long time){
+	private void showDialogWrong(final Sentences sentences,long time){
 
+		final long thisTime = ReminderUtility.checkTimeConflict(time,sentencesDAO);
+		
 		new AlertDialog.Builder(this)
 	    .setTitle("Check Answer")
-	    .setMessage("Your answer was wrong the correct answer is \""+sentences.getWorldTrans() +"\" \n nest alarm will be at " + ReminderUtility.convertTime(time))
+	    .setMessage("Your answer was wrong the correct answer is \""+sentences.getWorldTrans() +"\" \n nest alarm will be at " + ReminderUtility.convertTime(thisTime))
 	    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int which) { 
 	        	
-	        	prepareAlarm(sentences,time);
+	        	
+	        	prepareAlarm(sentences,thisTime);
 
 	           	Log.i("AlarmManagerActivity", " @@@ stop alarm @@@");
 	    				if (mediaPlayer != null)

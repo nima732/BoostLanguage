@@ -106,6 +106,8 @@ public class MainActivity extends ListActivity {
 		
 		long time = System.currentTimeMillis() + (long)(setting.getNumberWrongDay() * 24 * 60 * 60 * 1000);
 		
+		time = ReminderUtility.checkTimeConflict(time, sentencesDAO);
+		
 		String sentencesTXT =  sentencesText.getText().toString();
 		String transTxt = transText.getText().toString();
 		
@@ -220,7 +222,9 @@ public class MainActivity extends ListActivity {
 	        public void onClick(DialogInterface dialog, int which) { 
 
 	        	long time = System.currentTimeMillis() + (long)(setting.getNumberWrongDay() * 24 * 60 * 60 * 1000);
-//	        	System.out.println(sentencesDAO.getMaxTime());
+	        	
+	        	time = ReminderUtility.checkTimeConflict(time, sentencesDAO);
+	        	
 	        	prepareAlarm(sentences,time);
 	        	onResume();
 	        }
@@ -281,5 +285,6 @@ public class MainActivity extends ListActivity {
 		}
 		
 	}
+
 		
 }
