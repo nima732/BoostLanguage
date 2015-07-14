@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -124,7 +125,7 @@ public class SentencesDAO {
 	
 	public void updateRows(Sentences sentences){
 		
-		Log.i(SentencesDAO.class.getName(), ">>>>> update a row");
+		Log.i(SentencesDAO.class.getName(), ">>>>> update a row " + sentences.getId());
 		ContentValues values = new ContentValues();
 		values.put(SQLiteHelper.COLUMN_NAME_MAIN_SEN, sentences.getWorld());
 		values.put(SQLiteHelper.COLUMN_NAME_TRANS, sentences.getWorldTrans());
@@ -164,41 +165,71 @@ public class SentencesDAO {
 	
 	public Sentences insertRowNotifi(Sentences sentences) {
 		Log.i(Sentences.class.getName(), ">>>>> insert a Notifi");
+		Cursor cursor = null;
+		Sentences newSentence = null;
+		
 		ContentValues values = new ContentValues();
 		values.put(SQLiteHelper.COLUMN_NAME_ID, sentences.getId());
 		values.put(SQLiteHelper.COLUMN_NAME_MAIN_SEN, sentences.getWorld());
 		values.put(SQLiteHelper.COLUMN_NAME_TRANS, sentences.getWorldTrans());
 		values.put(SQLiteHelper.COLUMN_NAME_TIME, sentences.getTime());
+		try {
 		long insertId = database.insert(SQLiteHelper.TABLE_NAME_NOTIFI, null, values);
 		Log.i("insertId : ", String.valueOf(sentences.getId()));
-		Cursor cursor = database.query(SQLiteHelper.TABLE_NAME_NOTIFI, allColumns,
+		cursor = database.query(SQLiteHelper.TABLE_NAME_NOTIFI, allColumns,
 				SQLiteHelper.COLUMN_NAME_ID + " = " + sentences.getId(), null, null,
 				null, null);
 		cursor.moveToFirst();
-		Sentences newSentence = cursorToSentences(cursor);
+		newSentence = cursorToSentences(cursor);
+		}catch (SQLiteConstraintException ex){
+//			ignore logging for constraint.
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		cursor.close();
 		return newSentence;
 	}
 	
-	public long getMaxTime(){
+	public long getCheckTimeConflict(long time){
 
 		long maxTime = 0;
+		int count = 0;
+		
+		Log.i("SentencesDAO", "&&&&111 &&&& " + maxTime);
+
 		
 		Cursor cursor = null;
 		try{
-		cursor = database.rawQuery("select max( "+ SQLiteHelper.COLUMN_NAME_TIME +" ) as maxTime from "
-				+ SQLiteHelper.TABLE_NAME + " group by " + SQLiteHelper.COLUMN_NAME_TIME, null);
+			
+			
+		cursor = database.rawQuery("select * from "+ SQLiteHelper.TABLE_NAME + " where " 
+		+ SQLiteHelper.COLUMN_NAME_TIME +" between "+ (time - (1000*60*2)) +" and "+ (time + (1000*60*2)), null);
+		
+			
+//		cursor = database.rawQuery("select max( "+ SQLiteHelper.COLUMN_NAME_TIME +" ) as maxTime from "
+//				+ SQLiteHelper.TABLE_NAME + " group by " + SQLiteHelper.COLUMN_NAME_TIME, null);
 
 		cursor.moveToFirst();
-//		while (!cursor.isAfterLast()) {
-			maxTime	 =  cursor.getLong(0);
-//		}
-		// make sure to close the cursor
-		cursor.close();
+		while (!cursor.isAfterLast()) {
+			maxTime	 =  cursor.getLong(3);
+			Log.i("SentencesDAO", "&&&&& " + maxTime);
+			count++;
+			cursor.moveToNext();
+		}
+
+		if (count > 0){
+			maxTime = maxTime + (1000*60*3);
+			time = maxTime;
+			Log.i("SentencesDAO", "&&2222&&& " + time);
+			cursor.close();
+			time = getCheckTimeConflict(time);
+		}
+		
+		
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-		return maxTime;
+		return time;
 		
 	}
 

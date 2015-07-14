@@ -170,7 +170,9 @@ public class MainActivity extends ListActivity {
 				time, pendingIntent);
 
 		sentences.setTime(time);
+		System.out.println(">>>>>>>333>>>> "+ time );
 		sentencesDAO.updateRows(sentences);
+		System.out.println(">>>>>>>444>>>> "+ sentences.getId() );
 		
 		if (myToast != null) {
 			myToast.cancel();
@@ -210,6 +212,7 @@ public class MainActivity extends ListActivity {
 //		Sentences sentences =  (Sentences) getListAdapter().getItem(position);
 		Sentences sentences =  ReminderUtility.convertHashMapToSentences((HashMap<String, String>) listView.getAdapter().getItem(position));
 		
+		System.out.println(">>>>>>>111>>>> "+ sentences.getId() );
 		
 		dialogSetAlarm(sentences);
 	}
@@ -224,7 +227,7 @@ public class MainActivity extends ListActivity {
 	        	long time = System.currentTimeMillis() + (long)(setting.getNumberWrongDay() * 24 * 60 * 60 * 1000);
 	        	
 	        	time = ReminderUtility.checkTimeConflict(time, sentencesDAO);
-	        	
+	        	System.out.println(">>>>>>>222>>>> "+ time );
 	        	prepareAlarm(sentences,time);
 	        	onResume();
 	        }

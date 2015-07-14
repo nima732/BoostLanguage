@@ -181,12 +181,13 @@ public class ReminderUtility {
 	public static long checkTimeConflict(long time, SentencesDAO sentencesDAO) {
 
 		
-		long maxTime = sentencesDAO.getMaxTime();
+		long maxTime = sentencesDAO.getCheckTimeConflict(time);
 		System.out.println(maxTime);
-		if ((maxTime + (1000 * 60 * 10)) >= time) {
-			time = (maxTime + (1000 * 60 * 10));
-		}
-		
+//		if ((maxTime + (1000 * 60 * 10)) >= time) {
+//			time = (maxTime + (1000 * 60 * 10));
+//		}
+
+		time = maxTime;
 		return time;
 	}
 

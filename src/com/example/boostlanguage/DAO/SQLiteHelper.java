@@ -21,7 +21,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
   public static final String wrong_answer = "wrong_answer";
   
   private static final String DATABASE_NAME = "sentences.db";
-  private static final int DATABASE_VERSION = 9;
+  private static final int DATABASE_VERSION = 10;
 
   // Database creation sql statement
   private static final String DATABASE_CREATE = "create table "
@@ -40,7 +40,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	      + TABLE_NAME_NOTIFI + "(" + COLUMN_NAME_ID
 	      + " not null, " + COLUMN_NAME_MAIN_SEN
 	      + " text not null, " + COLUMN_NAME_TRANS + ", " + COLUMN_NAME_TIME
-	      + ");";
+	      + ", unique ("+ COLUMN_NAME_ID +"));";
 
   
   public SQLiteHelper(Context context) {
