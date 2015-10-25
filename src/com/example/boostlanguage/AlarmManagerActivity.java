@@ -97,8 +97,8 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 			System.out.println(sentences.getWorld());
 			setNotification(sentences);
 			if (wakeLock.isHeld()){
+				Log.e("AlarmManagerAtivity", " >> Kill AramManager <<.");
 				finish();
-				Log.e("AlarmManagerAtivity", " >> Kill AramManager <<");
 			}
 		}
 		
