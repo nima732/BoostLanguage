@@ -73,7 +73,7 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 		
 		wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
 				" My wake log");
-		wakeLock.acquire(1);
+		wakeLock.acquire(1000);
 
 
 		Button stopButton = (Button) findViewById(R.id.stopAlarm);
@@ -95,8 +95,11 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 			e.printStackTrace();
 			Log.i("AlarmManagerAtivity", "######111######");
 			System.out.println(sentences.getWorld());
-			
 			setNotification(sentences);
+			if (wakeLock.isHeld()){
+				finish();
+				Log.e("AlarmManagerAtivity", " >> Kill AramManager <<");
+			}
 		}
 		
 //		try{
