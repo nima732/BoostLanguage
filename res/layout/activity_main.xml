@@ -11,7 +11,9 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_margin="1dp"
+        android:orientation="vertical" 
+        android:background="#5858f4">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -29,12 +31,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="70dp"
-                android:layout_marginTop="38dp"
+                android:layout_marginTop="10dp"
                 android:ems="10" >
 
             </EditText>
 
             <TextView
+                android:layout_marginTop="20dp"
                 android:id="@+id/EnterTrans"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,14 +48,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="70dp"
-                android:layout_marginTop="38dp"
+                android:layout_marginTop="10dp"
                 android:ems="10" >
             </EditText>
 
             <RelativeLayout
                 android:id="@+id/RelativeLayout1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:padding="10dp" >
 
                 <Button
                     android:id="@+id/button1"
@@ -85,6 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/hello" >
+
             </ListView>
         </LinearLayout>
     </LinearLayout>
