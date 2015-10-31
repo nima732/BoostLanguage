@@ -182,6 +182,7 @@ public class SentencesDAO {
 		cursor.moveToFirst();
 		newSentence = cursorToSentences(cursor);
 		}catch (SQLiteConstraintException ex){
+			Log.d("SentencesDAO : ", "SQLiteConstraintException");
 //			ignore logging for constraint.
 		}catch (Exception e) {
 			e.printStackTrace();

@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.example.boostlanguage.DAO.SQLiteHelper;
 import com.example.boostlanguage.DAO.SentencesDAO;
 import com.example.boostlanguage.DAO.SettingDAO;
+import com.example.boostlanguage.broadcast.ScreanReceiver;
 import com.example.boostlanguage.entity.Sentences;
 import com.example.boostlanguage.entity.Setting;
 import com.example.bootlanguage.util.Constant;
@@ -16,6 +17,7 @@ import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,15 +45,16 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 	Sentences sentences;
 	private Toast myToast;
 	MediaPlayer mediaPlayer,mediaPlayerBeep;
+	private boolean stop_button = false;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		sentences = null;
-
+		
 		PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
-		Log.i("AlarmManagerActivity", "################################");
+		Log.i("AlarmManagerActivity", "############onCreate##########");
 
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.getWindow().setFlags(
@@ -87,21 +90,47 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 	}
 	
 
-	public void onStop() {
-		super.onStop();
-		try{
-			wakeLock.release();	
-		}catch (Exception e) {
-			e.printStackTrace();
+	@Override
+	protected void onPause() {
+		Log.d("AlarmManagerActivity", "############onPause##########");
+		if (ScreanReceiver.wasScreenOn && !stop_button){
+			Log.d("AlarmManagerAtivity", "######wasScreenOn######");
+			System.out.println(stop_button);
+
+			/*
+			 * Set notification
+			 * */
 			Log.i("AlarmManagerAtivity", "######111######");
 			System.out.println(sentences.getWorld());
-			setNotification(sentences);
-			if (wakeLock.isHeld()){
-				Log.e("AlarmManagerAtivity", " >> Kill AramManager <<.");
-				finish();
-			}
+				setNotification(sentences);
+
+			
+		}else {
+			Log.d("AlarmManagerAtivity", "######wasScreenOff######");
 		}
-		
+
+		if (wakeLock.isHeld())
+		wakeLock.release();	
+
+		stop_button = false;
+		super.onPause();
+	}
+
+
+	public void onStop() {
+		super.onStop();
+
+		Log.d("AlarmManagerAtivity", "######OnStop######");
+//		if (wakeLock.isHeld())
+//			wakeLock.release();	
+//			Log.i("AlarmManagerAtivity", "######111######");
+//			System.out.println(sentences.getWorld());
+//			if (!stop_button){
+//				System.out.println(" 	stop_button is " + stop_button );
+//				setNotification(sentences);
+//			}
+//			stop_button = false;
+			
 //		try{
 //
 //			finish();
@@ -227,6 +256,7 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		
+		Log.d("AlarmManagerActivity", "############onClick##########");
 		switch (v.getId()){
 		case  R.id.alarmCheck :
 			Log.i("AlarmManagerActivity", " @@@ Check alarm @@@");
@@ -240,6 +270,12 @@ public class AlarmManagerActivity extends Activity implements OnClickListener{
 			Log.i("AlarmManagerActivity", " @@@ stop alarm @@@");
 			
 			resetTimeGUI();
+			
+			/*
+			 * To avoid to set notification.
+			 * */
+			Log.i("AlarmManagerActivity", "############stopAlarm##########");			
+			stop_button = true;
 			
 			if (mediaPlayer != null)
 			mediaPlayer.stop();
